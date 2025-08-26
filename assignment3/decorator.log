@@ -1,0 +1,30 @@
+function: hello
+positional parameters: None
+keyword parameters: None
+return: None
+
+function: hello
+positional parameters: None
+keyword parameters: None
+return: None
+
+function: positional
+positional parameters: [1, 2, 3, 4]
+keyword parameters: None
+return: True
+
+function: hello
+positional parameters: None
+keyword parameters: None
+return: None
+
+function: positional
+positional parameters: [1, 2, 3, 4]
+keyword parameters: None
+return: True
+
+function: keywords
+positional parameters: None
+keyword parameters: {'key': 'value'}
+return: <function log_decorator at 0x0000024F45813EC0>
+
