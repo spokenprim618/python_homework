@@ -1,6 +1,6 @@
 import sqlite3
 
-with sqlite3.connect("../db/magazines.db") as conn:
+with sqlite3.connect(".\db\magazines.db") as conn:
     conn.execute("PRAGMA foreign_keys = 1")
     try:
         cursor = conn.cursor()
@@ -16,7 +16,7 @@ with sqlite3.connect("../db/magazines.db") as conn:
     )
     """)
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS subscribers (
+    CREATE TABLE IF NOT EXISTS Subscribers (
         subscriber_id INTEGER PRIMARY KEY,
         subscriber_name TEXT NOT NULL UNIQUE,
         address TEXT NOT NULL
@@ -45,28 +45,24 @@ with sqlite3.connect("../db/magazines.db") as conn:
     """)
     
     def add_publisher(cursor, publisher_name):
-        result = cursor.fetchall()
-        if len(result) > 0:
-            if result[0][1] == publisher_name:
-                print(f"Publisher {publisher_name} already exists")
-                return
-        cursor.execute("INSERT INTO Publishers (publisher_name) VALUES (?)", (publisher_name,))
+        try: 
+            cursor.execute("INSERT INTO Publishers (publisher_name) VALUES (?)", (publisher_name,))
+
+        except sqlite3.IntegrityError:
+            print(f"{publisher_name} is already in the database.")        
 
     def add_subscriber(cursor, subscriber_name, address):
-        result = cursor.fetchall()
-        if len(result) > 0:
-            if result[0][1] == subscriber_name and result[0][2] == address:
-                print(f"Subscriber {subscriber_name} already exists")
-                return
-        cursor.execute("INSERT INTO Subscribers (subscriber_name, address) VALUES (?,?)", (subscriber_name, address))
+        try:
+            cursor.execute("INSERT INTO Subscribers (subscriber_name, address) VALUES (?,?)", (subscriber_name, address))
+        except sqlite3.IntegrityError:
+            print(f"{subscriber_name} is already in the database.")    
 
     def add_magazine(cursor, magazine_name, publisher_id):
-        result = cursor.fetchall()
-        if len(result) > 0:
-            if result[0][1] == magazine_name and result[0][2] == publisher_id:
-                print(f"Magazine {magazine_name} already exists")
-                return
-        cursor.execute("INSERT INTO Magazines (magazine_name, publisher_id) VALUES (?,?)", (magazine_name, publisher_id))
+        try:
+            
+            cursor.execute("INSERT INTO Magazines (magazine_name, publisher_id) VALUES (?,?)", (magazine_name, publisher_id))
+        except sqlite3.IntegrityError:
+            print(f"{magazine_name} is already in the database.")    
 
    
 
@@ -82,32 +78,32 @@ with sqlite3.connect("../db/magazines.db") as conn:
     
     conn.commit()
     def add_subscription(cursor, subscriber, magazine, subscription_date):
-        cursor.execute("SELECT * FROM Subscribers WHERE subscriber_name = ?", (subscriber,))
+        cursor.execute("SELECT * FROM Subscribers WHERE subscriber_id = ?", (subscriber,))
         result = cursor.fetchall()
-        if len(result) > 0:
+        try:
             subscriber_id = result[0][0]
-        else:
+        except Exception as e:
             print(f"Subscriber {subscriber} not found")
+            print(e)
             return
-        cursor.execute("SELECT * FROM Magazines WHERE magazine_name = ?", (magazine,))
+        cursor.execute("SELECT * FROM Magazines WHERE magazine_id = ?", (magazine,))
         result = cursor.fetchall()
-        if len(result) > 0:
+        try:
             magazine_id = result[0][0]
-        else:
+        except Exception as e:
             print(f"Magazine {magazine} not found")
+            print(e)
+
             return
-        cursor.execute("INSERT INTO Subscriptions (subscriber_id, magazine_id, subscription_date) VALUES (?,?,?)", (subscriber_id, magazine_id, subscription_date))
-        result = cursor.fetchall()
-        if len(result) > 0:
-            print(f"Subscription added successfully for {subscriber} and {magazine}")
-        else:
+        try:
+            cursor.execute("INSERT INTO Subscriptions (subscriber_id, magazine_id, subscription_date) VALUES (?,?,?)", (subscriber_id, magazine_id, subscription_date))
+        except Exception as e:
             print(f"Subscription failed for {subscriber} and {magazine}")
-                
-                
+            print(e)
     add_subscription(cursor, 1, 1, "2021-01-01")
     add_subscription(cursor, 2, 2, "2021-01-02")
     add_subscription(cursor, 3, 3, "2021-01-03")
-    cursor.commit()
+    conn.commit()
     cursor.execute("SELECT * FROM Subscriptions")
     result = cursor.fetchall()
     for row in result:
@@ -116,9 +112,10 @@ with sqlite3.connect("../db/magazines.db") as conn:
     result = cursor.fetchall()
     for row in result:
         print(row)
-    cursor.execute("JOIN Publishers ON Magazines.publisher_id = 1")
+    cursor.execute("SELECT Magazines.publisher_id,Magazines.magazine_name FROM Magazines JOIN Publishers ON Magazines.publisher_id = Publishers.publisher_id WHERE Publishers.publisher_id=1")
     result = cursor.fetchall()
     for row in result:
         print(row)
         
-    
+    conn.commit()
+print("Done")

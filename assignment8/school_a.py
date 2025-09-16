@@ -1,7 +1,7 @@
 import sqlite3
 
 # Connect to the database
-with sqlite3.connect("../db/school.db") as conn:
+with sqlite3.connect(".\db\school.db") as conn:
     cursor = conn.cursor()
 
     # Create tables

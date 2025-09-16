@@ -14,7 +14,7 @@ def add_course(cursor, name, instructor):
     except sqlite3.IntegrityError:
         print(f"{name} is already in the database.")
 
-with sqlite3.connect("../db/school.db") as conn:
+with sqlite3.connect(".\db\school.db") as conn:
     conn.execute("PRAGMA foreign_keys = 1") # This turns on the foreign key constraint
     cursor = conn.cursor()
 
@@ -37,25 +37,32 @@ with sqlite3.connect("../db/school.db") as conn:
 def enroll_student(cursor, student, course):
     cursor.execute("SELECT * FROM Students WHERE name = ?", (student,)) # For a tuple with one element, you need to include the comma
     results = cursor.fetchall()
-    if len(results) > 0:
-        student_id = results[0][0]
-    else:
-        print(f"There was no student named {student}.")
+    try:
+        student_id = result[0][0]
+    except Exception as e:
+        print(f"Student {student} not found")
+        print(e)
         return
     cursor.execute("SELECT * FROM Courses WHERE course_name = ?", (course,))
     results = cursor.fetchall()
-    if len(results) > 0:
-        course_id = results[0][0]
-    else:
-        print(f"There was no course named {course}.")
+    try:
+        course_id = result[0][0]
+    except Exception as e:
+        print(f"Course {course} not found")
+        print(e)
         return
-    cursor.execute("INSERT INTO Enrollments (student_id, course_id) VALUES (?, ?)", (student_id, course_id))
+    try:
+        cursor.execute("INSERT INTO Enrollments (student_id, course_id) VALUES (?, ?)", (student_id, course_id))
+    except Exception as e:
+        print(e)
+
 
     ... # And at the bottom of your "with" block
 
-    enroll_student(cursor, "Alice", "Math 101")
-    enroll_student(cursor, "Alice", "Chemistry 101")
-    enroll_student(cursor, "Bob", "Math 101")
-    enroll_student(cursor, "Bob", "English 101")
-    enroll_student(cursor, "Charlie", "English 101")
-    conn.commit() # more writes, so we have to commit to make them final!
+enroll_student(cursor, "Alice", "Math 101")
+enroll_student(cursor, "Alice", "Chemistry 101")
+enroll_student(cursor, "Bob", "Math 101")
+enroll_student(cursor, "Bob", "English 101")
+enroll_student(cursor, "Charlie", "English 101")
+conn.commit() # more writes, so we have to commit to make them final!
+print("Done")
