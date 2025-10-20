@@ -1,7 +1,7 @@
-from dash import Dash, dcc, html, Input, Output 
-import plotly.express as px  
-import plotly.data as pldata  
-
+from dash import Dash, dcc, html, Input, Output
+import plotly.express as px
+import plotly.data as pldata
+from waitress import serve
 df = pldata.gapminder()
 
 countries = df['country'].drop_duplicates()
@@ -13,10 +13,11 @@ app.layout = html.Div([
     dcc.Dropdown(
         id="country-dropdown",
         options=[{"label": c, "value": c} for c in countries],
-        value="Canada"  
+        value="Canada"
     ),
     dcc.Graph(id="gdp-growth")
 ])
+
 
 @app.callback(
     Output("gdp-growth", "figure"),
@@ -33,5 +34,6 @@ def update_graph(country_name):
     )
     return fig
 
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    serve(app.server, host="0.0.0.0", port=8050)
