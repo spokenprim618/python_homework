@@ -10,8 +10,8 @@ print(df.tail(10))
 df['strength'] = df['strength'].str.replace(r'[^0-9.]', '', regex=True)
 
 # Convert to float
-df['strength'] = pd.to_numeric(df['strength'], errors='coearce')
+df['strength'] = pd.to_numeric(df['strength'], errors='coerce')
 
 fig = px.scatter(df, x='strength', y='frequency',color = 'direction',
                  title=' strength vs. frequency',hover_data=['frequency'])
-fig.write_html('wind.html',auto_open=True)
+fig.write_html('./wind.html',auto_open=True)
