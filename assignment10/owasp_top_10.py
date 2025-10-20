@@ -1,20 +1,26 @@
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service as ChromeService
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
-from time import sleep
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+import pandas as pd
 import pandas as pd
 import json
 import csv
 
-options = webdriver.ChromeOptions()
-options.add_argument('--headless')  # Enable headless mode
-options.add_argument('--disable-gpu')  # Optional, recommended for Windows
-options.add_argument('--window-size=1920x1080')  # Optional, set window size
+chrome_path = r"C:\Users\willv\Downloads\chrome-win64\chrome-win64\chrome.exe"
+driver_path = r"C:\Users\willv\Downloads\chromedriver-win64\chromedriver-win64\chromedriver.exe"
 
-driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()),options=options)
-sleep(2)
-webPage = driver.get("https://durhamcounty.bibliocommons.com/v2/search?query=learning%20spanish&searchType=smart")
+options = Options()
+options.binary_location = chrome_path
+options.add_argument("--headless=new")
+
+service = Service(driver_path)
+driver = webdriver.Chrome(service=service, options=options)
+wait = WebDriverWait(driver, 10)
+
+webPage = driver.get("https://owasp.org/www-project-top-ten/?")
 
 
 h2 = driver.find_element(By.CSS_SELECTOR,'[id="top-10-web-application-security-risks"]') # our starting point
@@ -34,4 +40,4 @@ if (h2):
 
 driver.quit()
 df = pd.DataFrame(results)
-df.to_csv("./assignment10/owasp_top_10.csv")
+df.to_csv("./owasp_top_10.csv")

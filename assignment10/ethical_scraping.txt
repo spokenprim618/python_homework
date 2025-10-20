@@ -1,4 +1,20 @@
 you can not scrape the api, certain pages,users, blacklists, protected titles,
+examples being
+
+User-agent: *
+Allow: /w/api.php?action=mobileview&
+Allow: /w/load.php?
+Allow: /api/rest_v1/?doc
+Allow: /w/rest.php/site/v1/sitemap
+Disallow: /w/
+Disallow: /api/
+Disallow: /trap/
+Disallow: /wiki/Special:
+Disallow: /wiki/Spezial:
+Disallow: /wiki/Spesial:
+Disallow: /wiki/Special%3A
+Disallow: /wiki/Spezial%3A
+Disallow: /wiki/Spesial%3A
 
 in general dynamically created pages shouldnt be scraped
 there is rps of 20 as the limit
@@ -7,3 +23,7 @@ there is rps of 20 as the limit
 It protects their back end from an overload of requests.
 It allows users and certain scrapers to be used properly in the websites scope.
 Eductation on how to best use scrapers within limits is promoting ethical scraping and education.
+Which also encourages responsible scraping because they allow what they are capablle of handling and how 
+to best scrape their site explicitly while removing and showing why they have removed certain bots
+
+
