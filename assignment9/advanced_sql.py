@@ -27,7 +27,7 @@ query="""
 SELECT 
     c.customer_name,
     AVG(orders_sub.total_price) AS average_total_price
-FROM customer AS c
+FROM customers AS c
 LEFT JOIN (
     -- subquery from step 1
     SELECT 
@@ -56,8 +56,8 @@ cursor = conn.cursor()
 cursor.execute("""
     INSERT INTO orders (customer_id, employee_id, order_date)
     VALUES (
-        (SELECT customer_id FROM customer WHERE customer_name = 'Perez and Sons'),
-        (SELECT employee_id FROM employee WHERE employee_name = 'Miranda Harris'),
+        (SELECT customer_id FROM customers WHERE customer_name = 'Perez and Sons'),
+        (SELECT employee_id FROM employees WHERE employee_name = 'Miranda Harris'),
         DATE('now')
     )
     RETURNING order_id;
