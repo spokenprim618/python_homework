@@ -1,0 +1,5 @@
+static and iteractive both have their place
+I see static being in slides 
+but interactive is better for websites
+or you can have them included in presentations
+but as animation for example
