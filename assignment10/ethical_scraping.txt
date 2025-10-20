@@ -1,0 +1,9 @@
+you can not scrape the api, certain pages,users, blacklists, protected titles,
+
+in general dynamically created pages shouldnt be scraped
+there is rps of 20 as the limit
+5 seonds for crawl delay
+
+It protects their back end from an overload of requests.
+It allows users and certain scrapers to be used properly in the websites scope.
+Eductation on how to best use scrapers within limits is promoting ethical scraping and education.
